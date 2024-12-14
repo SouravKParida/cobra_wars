@@ -464,6 +464,46 @@ class MatchController:
         tally_width = tally_surface2.get_width()
         self.canvas.blit(tally_surface2, (DISPLAY_WIDTH - tally_width - 10, 10))
 
+    def display_battle_over_screen(self):
+        """
+            Displays the end-of-battle screen, showing the results and providing options to restart or end the battle.
+
+        """
+        if not self.scoresReady:
+            self.canvas.fill(COLOR_BLACK)
+
+            # Load and display the Battle Over image
+            battle_over_img = pygame.image.load('game_over_image.png')  # Ensure the 'battle_over.png' is in the correct directory
+            battle_over_img_rect = battle_over_img.get_rect(center=(DISPLAY_WIDTH // 2, DISPLAY_HEIGHT // 4))
+            self.canvas.blit(battle_over_img, battle_over_img_rect)
+
+            # Read tallies from file and calculate total tallies
+            with open("battle_scores.txt", "r") as file:
+                tallies = file.readlines()
+            combatant1_total = sum(int(tally.split('-')[0]) for tally in tallies)
+            combatant2_total = sum(int(tally.split('-')[1].strip()) for tally in tallies)
+            # Determine the champion based on total tallies
+            champion_text = "Combatant 1 Triumphs!" if combatant1_total > combatant2_total else "Combatant 2 Triumphs!" if combatant2_total > combatant1_total else "Stalemate Achieved!"
+            battle_font = pygame.font.Font(None, 36)
+            result_surface = battle_font.render(champion_text, True, COLOR_WHITE)
+            result_rectangle = result_surface.get_rect(center=(DISPLAY_WIDTH // 2, DISPLAY_HEIGHT // 2))
+            self.canvas.blit(result_surface, result_rectangle)
+
+            # Display the total tallies
+            tally_text = f"Combatant 1: {combatant1_total} - Combatant 2: {combatant2_total}"
+            tally_surface = battle_font.render(tally_text, True, COLOR_WHITE)
+            tally_rectangle = tally_surface.get_rect(center=(DISPLAY_WIDTH // 2, DISPLAY_HEIGHT // 2 + 40))
+            self.canvas.blit(tally_surface, tally_rectangle)
+
+            self.scoresReady = True  # Set the flag to True after tallies are calculated
+
+            # Display controls
+            self.controls['replay'] = self.render_button("Restart Battle", DISPLAY_WIDTH // 2 - 50,
+                                                         DISPLAY_HEIGHT * 3 // 4)
+            self.controls['end'] = self.render_button("End Battle", DISPLAY_WIDTH // 2 - 50,
+                                                      DISPLAY_HEIGHT * 3 // 4 + 60)
+
+
 
 
 
