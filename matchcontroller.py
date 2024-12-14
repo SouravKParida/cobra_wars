@@ -310,4 +310,64 @@ class MatchController:
         self.nourishment = self.generate_nourishment()
         self.restorativeOrbs.clear()
         self.lastOrbRegen = time.time()
+        def display(self):
+        """
+           Handles all rendering and display updates for the game based on the current game state.
+
+           Operations:
+           - Clears the screen and redraws game elements when the game is active.
+           - Renders reptiles, nourishment, and vitality meters during active play.
+           - Displays game controls and text input fields when in configuration or menu mode.
+           - Shows the game's logo and menu options when the game is not in active play or configuration.
+           - Transitions to a game over screen layout when the game has ended.
+        """
+        if not self.isOver:
+            self.canvas.fill(COLOR_BLACK)  # Clear the screen for regular game updates
+
+            if self.isInPlay:
+                # Render game play elements like reptiles, nourishment, vitality etc.
+                self.render_reptile(self.combatant1)
+                self.render_reptile(self.combatant2)
+                for orb in self.restorativeOrbs:
+                    orb.render(self.canvas)
+                self.canvas.blit(self.creatureGraphic, (self.nourishment['x'] * REPTILE_DIMENSION, self.nourishment['y'] * REPTILE_DIMENSION))
+                self.render_vitality_meter(20, DISPLAY_HEIGHT - 20, self.combatant1.vitality, 100)
+                self.render_vitality_meter(DISPLAY_WIDTH - 120, DISPLAY_HEIGHT - 20, self.combatant2.vitality, 100)
+                self.display_scores()
+
+                # Display current battle information
+                font_style = pygame.font.Font(None, 36)  # Define font at the start of the method
+                battle_info_text = f"Battle: {self.currentBattle}"
+                battle_info_surface = font_style.render(battle_info_text, True, COLOR_GREEN)
+                battle_info_rectangle = battle_info_surface.get_rect(center=(DISPLAY_WIDTH // 2, 20))
+                self.canvas.blit(battle_info_surface, battle_info_rectangle)
+
+            elif self.isAcceptingInput:
+                # Display the input prompt and the current text input by the user
+                font_style = pygame.font.Font(None, 36)
+                prompt_surface = font_style.render("Enter number of battles:", True, COLOR_GREEN)
+                prompt_rectangle = prompt_surface.get_rect(center=(DISPLAY_WIDTH // 2, DISPLAY_HEIGHT // 2 - 50))
+                self.canvas.blit(prompt_surface, prompt_rectangle)
+
+                input_surface = font_style.render(self.enteredText, True, COLOR_BLACK, COLOR_GREEN)
+                input_rectangle = input_surface.get_rect(center=(DISPLAY_WIDTH // 2, DISPLAY_HEIGHT // 2))
+                self.canvas.blit(input_surface, input_rectangle)
+
+                # Render the Confirm button
+                self.controls['confirm'] = self.render_button("Confirm", DISPLAY_WIDTH // 2 - 50,
+                                                              DISPLAY_HEIGHT // 2 + 50)
+
+            else:
+                # Display the game logo and menu buttons when not in play
+                logo_rectangle = self.logoGraphic.get_rect(center=(DISPLAY_WIDTH // 2, 150))
+                self.canvas.blit(self.logoGraphic, logo_rectangle)
+                self.controls['initiate'] = self.render_button("Start Battle", 550, 275)
+                self.controls['replay'] = self.render_button("Restart", 550, 350)
+                self.controls['end'] = self.render_button("Quit", 550, 425)
+
+        else:
+            # Only show battle over screen when battle is over
+            self.display_battle_over_screen()
+
+        pygame.display.update()  # Update the display at the end of the method
 
