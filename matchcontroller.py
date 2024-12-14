@@ -423,6 +423,27 @@ class MatchController:
         self.restorativeOrbs.clear()
         self.lastOrbRegen = time.time()  # Reset orb regeneration timer
 
+    def render_button(self, label, xPos, yPos, isActive=True):
+        """
+           Draws a button on the game canvas.
+           Args:
+               label (str): The text label displayed on the button.
+               xPos (int): The x-coordinate of the button's top-left corner.
+               yPos (int): The y-coordinate of the button's top-left corner.
+               isActive (bool): A flag indicating whether the button is active (clickable).
+
+           Returns:
+               pygame.Rect: A rectangle representing the button's boundaries, which can be used for click detection.
+        """
+        button_tint = COLOR_GRAY if not isActive else COLOR_WHITE
+        action_rect = pygame.Rect(xPos, yPos, ACTION_WIDTH, ACTION_HEIGHT)
+        pygame.draw.rect(self.canvas, button_tint, action_rect)
+        label_surf = pygame.font.Font(None, 24).render(label, True, COLOR_BLACK)
+        label_rect = label_surf.get_rect(center=action_rect.center)
+        self.canvas.blit(label_surf, label_rect)
+        return action_rect
+
+
 
 
 
