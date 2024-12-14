@@ -443,6 +443,27 @@ class MatchController:
         self.canvas.blit(label_surf, label_rect)
         return action_rect
 
+    def display_scores(self):
+        """
+            Displays the current scores of both combatants on the game canvas.
+
+            Description:
+                This method renders the current tally of each combatant in the game. Combatant 1's score is displayed
+                on the top-left corner of the screen, while Combatant 2's score is displayed on the top-right corner.
+                This provides a clear and constant update on the score throughout the game.
+        """
+        score_font = pygame.font.Font(None, 36)  # Font for score display
+        # Combatant 1 tally on the top-left corner
+        tally_text1 = f"Combatant 1: {self.combatant1.tally}"
+        tally_surface1 = score_font.render(tally_text1, True, COLOR_WHITE)
+        self.canvas.blit(tally_surface1, (10, 10))
+
+        # Combatant 2 tally on the top-right corner
+        tally_text2 = f"Combatant 2: {self.combatant2.tally}"
+        tally_surface2 = score_font.render(tally_text2, True, COLOR_WHITE)
+        tally_width = tally_surface2.get_width()
+        self.canvas.blit(tally_surface2, (DISPLAY_WIDTH - tally_width - 10, 10))
+
 
 
 
