@@ -389,5 +389,17 @@ class MatchController:
         combatant2_total = sum(int(tally.split('-')[1].strip()) for tally in tallies)
         champion = "Combatant 1" if combatant1_total > combatant2_total else "Combatant 2"
         print(f"Winner is {champion} with scores {combatant1_total}-{combatant2_total}")
+    
+    def execute(self):
+        """
+            Executes the main game loop.
+        """
+        while self.isActive:
+            self.manage_interactions()
+            if self.isInPlay and not self.isPaused and not self.isOver:
+                self.advance_game()
+            self.display()
+            self.timer.tick(FRAME_RATE)
+
 
 
