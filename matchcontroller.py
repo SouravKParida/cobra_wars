@@ -310,7 +310,7 @@ class MatchController:
         self.nourishment = self.generate_nourishment()
         self.restorativeOrbs.clear()
         self.lastOrbRegen = time.time()
-        def display(self):
+    def display(self):
         """
            Handles all rendering and display updates for the game based on the current game state.
 
@@ -370,4 +370,12 @@ class MatchController:
             self.display_battle_over_screen()
 
         pygame.display.update()  # Update the display at the end of the method
+    
+    def archive_scores(self):
+        """
+           Archives the current scores by appending them to the 'battle_scores.txt' file.
+        """
+        with open("battle_scores.txt", "a") as file:
+            file.write(f"{self.combatant1.tally}-{self.combatant2.tally}\n")
+
 
