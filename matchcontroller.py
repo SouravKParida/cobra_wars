@@ -401,5 +401,28 @@ class MatchController:
             self.display()
             self.timer.tick(FRAME_RATE)
 
+    def restart_battle(self):
+        """
+            Resets all relevant game variables to restart the battle. This includes resetting combatant states, clearing score records,
+            and preparing the game for a new start.
+        """
+        self.isInPlay = False  # This should be false to show the menu again
+        self.isPaused = False
+        self.isOver = False  # Reset game over flag
+        self.scoresReady = False  # Reset this flag when the game is reset
+        self.currentBattle = 1
+        self.combatant1.tally = 0
+        self.combatant2.tally = 0
+        # Clear the battle scores file
+        open("battle_scores.txt", "w").close()
+
+        self.combatant1 = Reptile({'x': 5, 'y': DISPLAY_HEIGHT // REPTILE_DIMENSION // 2}, MOVE_RIGHT, COLOR_YELLOW)
+        self.combatant2 = Reptile({'x': DISPLAY_WIDTH // REPTILE_DIMENSION - 5, 'y': DISPLAY_HEIGHT // REPTILE_DIMENSION // 2}, MOVE_LEFT,
+                             COLOR_ORANGE)
+        self.nourishment = self.generate_nourishment()
+        self.restorativeOrbs.clear()
+        self.lastOrbRegen = time.time()  # Reset orb regeneration timer
+
+
 
 
