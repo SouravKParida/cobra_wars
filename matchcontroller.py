@@ -378,4 +378,16 @@ class MatchController:
         with open("battle_scores.txt", "a") as file:
             file.write(f"{self.combatant1.tally}-{self.combatant2.tally}\n")
 
+    def evaluate_scores_and_announce_winner(self):
+        """
+            Evaluates the scores from the 'battle_scores.txt' file to determine and announce the overall winner of the game.
+
+        """
+        with open("battle_scores.txt", "r") as file:
+            tallies = file.readlines()
+        combatant1_total = sum(int(tally.split('-')[0]) for tally in tallies)
+        combatant2_total = sum(int(tally.split('-')[1].strip()) for tally in tallies)
+        champion = "Combatant 1" if combatant1_total > combatant2_total else "Combatant 2"
+        print(f"Winner is {champion} with scores {combatant1_total}-{combatant2_total}")
+
 
